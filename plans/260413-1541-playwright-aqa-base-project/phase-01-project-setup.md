@@ -1,6 +1,6 @@
 # Phase 01 — Project Setup & Configuration
 
-**Status:** ⬜ pending
+**Status:** ✅ complete
 **Priority:** Critical (blocks all other phases)
 **Plan:** [plan.md](./plan.md)
 
@@ -362,26 +362,53 @@ npx husky add .husky/pre-commit "npx lint-staged"
 
 ## Todo
 
-- [ ] Run `pnpm init` in project root
-- [ ] Install all dependencies
-- [ ] Create `package.json` with scripts
-- [ ] Create `tsconfig.json` with path aliases
-- [ ] Create `playwright.config.ts`
-- [ ] Create `.eslintrc.json`
-- [ ] Create `.prettierrc.json` + `.prettierignore`
-- [ ] Create `.gitignore`
-- [ ] Create `.env.example`
-- [ ] Run `npx playwright install` for browsers
-- [ ] Setup Husky git hooks
-- [ ] Verify `pnpm lint` passes
-- [ ] Verify `pnpm type-check` passes
+- [x] Run `pnpm init` in project root
+- [x] Install all dependencies
+- [x] Create `package.json` with scripts
+- [x] Create `tsconfig.json` with path aliases
+- [x] Create `playwright.config.ts`
+- [x] Create `.eslintrc.json`
+- [x] Create `.prettierrc.json` + `.prettierignore`
+- [x] Create `.gitignore`
+- [x] Create `.env.example`
+- [x] Run `npx playwright install` for browsers
+- [x] Setup Husky git hooks
+- [x] Verify `pnpm lint` passes
+- [x] Verify `pnpm type-check` passes
+
+---
+
+## Implementation Deviations & Notes
+
+**Notable changes from plan:**
+
+1. **Added `@types/node ^20.x`** — Required for TypeScript compilation; was missing from original plan
+2. **Lint script adjustment** — Added `--no-error-on-unmatched-pattern` flag to both `lint` and `lint:fix` scripts
+   - Reason: `src/` directory is empty until Phase 02; flag prevents script failure
+3. **Playwright config paths** — Used string paths instead of `require.resolve()` for `globalSetup` and `globalTeardown`
+   - Reason: Simpler approach; both work in CommonJS config context
+4. **`.env.example` security** — Removed dotenv fallback from playwright.config.ts
+   - Reason: Security best practice; credentials changed to `CHANGE_ME` placeholders instead of example values
+5. **Husky prepare script** — Changed from `husky install` to `husky` (v9 API change)
+   - Reason: Husky v9+ uses different initialization method
+6. **ESLint explicit-function-return-types rule removed** — Not available in v7 plugin
+   - Reason: Type checking handled by TypeScript directly
+
+**Verification Results:**
+- ✓ `pnpm install` completed without errors
+- ✓ All config files created successfully
+- ✓ Playwright browsers installed (chromium, firefox, webkit)
+- ✓ Husky pre-commit hook configured
+- ✓ `pnpm type-check` PASSED
+- ✓ `pnpm lint` PASSED
+- ✓ `pnpm format:check` PASSED
 
 ---
 
 ## Success Criteria
 
-- `pnpm install` succeeds without errors
-- `pnpm type-check` produces no errors
-- `pnpm lint` reports no errors (warnings OK)
-- `pnpm format:check` passes
-- `playwright.config.ts` loads without errors
+- [x] `pnpm install` succeeds without errors
+- [x] `pnpm type-check` produces no errors
+- [x] `pnpm lint` reports no errors (warnings OK)
+- [x] `pnpm format:check` passes
+- [x] `playwright.config.ts` loads without errors

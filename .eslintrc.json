@@ -20,7 +20,7 @@
     "playwright/no-element-handle": "warn",
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-function-return-types": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "error"
   },

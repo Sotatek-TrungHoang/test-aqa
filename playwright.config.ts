@@ -2,9 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Load .env.local (gitignored) or .env.example fallback
+// Load .env.local (gitignored) — copy .env.example to .env.local and fill in real values
 dotenv.config({ path: path.resolve(__dirname, '.env.local') });
-dotenv.config({ path: path.resolve(__dirname, '.env.example') });
 
 const isCI = !!process.env.CI;
 const baseURL = process.env.BASE_URL || 'http://localhost:3000';
@@ -65,6 +64,6 @@ export default defineConfig({
     },
   ],
 
-  globalSetup: require.resolve('./tests/global-setup.ts'),
-  globalTeardown: require.resolve('./tests/global-teardown.ts'),
+  globalSetup: './tests/global-setup.ts',
+  globalTeardown: './tests/global-teardown.ts',
 });
