@@ -1,0 +1,18 @@
+node_modules/
+dist/
+
+# Test artifacts
+playwright-report/
+test-results/
+allure-results/
+allure-report/
+.auth/
+
+# Environment secrets (never commit)
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+*.log
