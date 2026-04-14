@@ -39,6 +39,7 @@ jobs:
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL || 'http://localhost:3000' }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL || 'http://localhost:3001/api' }}
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
