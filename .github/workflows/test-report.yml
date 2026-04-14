@@ -1,0 +1,49 @@
+name: Publish Allure Report
+
+on:
+  workflow_run:
+    workflows: ['Test CI']
+    types: [completed]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish to GitHub Pages
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion != 'skipped' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download allure report artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: test-ci.yml
+          name: allure-report
+          path: allure-report/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: reports/${{ github.event.workflow_run.run_number }}
+
+      - name: Comment PR with report link
+        uses: actions/github-script@v7
+        if: github.event.workflow_run.event == 'pull_request'
+        with:
+          script: |
+            const reportUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}/reports/${{ github.event.workflow_run.run_number }}`;
+            const prNumber = ${{ github.event.workflow_run.pull_requests[0].number || 0 }};
+            if (prNumber) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `📊 **Allure Test Report**: [View Report](${reportUrl})`,
+              });
+            }

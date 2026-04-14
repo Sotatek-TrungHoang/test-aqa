@@ -23,7 +23,7 @@ Designed for multi-engineer QA teams with scalable structure, TypeScript, POM pa
 | 1 | Project Setup & Config | ✅ complete | [phase-01-project-setup.md](./phase-01-project-setup.md) |
 | 2 | Core Infrastructure (fixtures, pages, helpers) | ✅ complete | [phase-02-core-infrastructure.md](./phase-02-core-infrastructure.md) |
 | 3 | Example Tests (smoke, regression, e2e, api) | ✅ complete | [phase-03-example-tests.md](./phase-03-example-tests.md) |
-| 4 | CI/CD (GitHub Actions) | ⬜ pending | [phase-04-cicd-setup.md](./phase-04-cicd-setup.md) |
+| 4 | CI/CD (GitHub Actions) | ✅ complete | [phase-04-cicd-setup.md](./phase-04-cicd-setup.md) |
 | 5 | Documentation | ⬜ pending | [phase-05-documentation.md](./phase-05-documentation.md) |
 
 ---
