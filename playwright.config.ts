@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
+import { Timeouts } from './src/config/timeouts';
 
 // Load .env.local (gitignored) — copy .env.example to .env.local and fill in real values
 dotenv.config({ path: path.resolve(__dirname, '.env.local') });
@@ -15,8 +16,8 @@ export default defineConfig({
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
   workers: isCI ? 2 : undefined,
-  timeout: 30_000,
-  expect: { timeout: 5_000 },
+  timeout: Timeouts.test,
+  expect: { timeout: Timeouts.assertion },
 
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
@@ -31,8 +32,8 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 10_000,
-    navigationTimeout: 30_000,
+    actionTimeout: Timeouts.action,
+    navigationTimeout: Timeouts.navigation,
   },
 
   projects: [

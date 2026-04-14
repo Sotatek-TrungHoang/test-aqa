@@ -1,6 +1,6 @@
 # Phase 02 — Core Infrastructure
 
-**Status:** ⬜ pending
+**Status:** ✅ complete
 **Priority:** Critical
 **Blocked by:** Phase 01 (tsconfig path aliases must exist first)
 **Plan:** [plan.md](./plan.md)
@@ -818,31 +818,31 @@ export default async function globalTeardown(_config: FullConfig): Promise<void>
 
 ## Todo
 
-- [ ] Create `src/config/environments.ts`
-- [ ] Create `src/config/timeouts.ts`
-- [ ] Create `src/pages/base.page.ts`
-- [ ] Create `src/pages/login.page.ts`
-- [ ] Create `src/pages/dashboard.page.ts`
-- [ ] Create `src/fixtures/pages.fixture.ts`
-- [ ] Create `src/fixtures/auth.fixture.ts`
-- [ ] Create `src/fixtures/api.fixture.ts`
-- [ ] Create `src/fixtures/index.ts`
-- [ ] Create `src/helpers/wait.helper.ts`
-- [ ] Create `src/helpers/data.helper.ts`
-- [ ] Create `src/helpers/assertion.helper.ts`
-- [ ] Create `src/helpers/storage.helper.ts`
-- [ ] Create `src/helpers/browser.helper.ts`
-- [ ] Create `src/api/api-client.ts`
-- [ ] Create `src/api/endpoints/users.endpoint.ts`
-- [ ] Create `src/utils/logger.ts`
-- [ ] Create `src/utils/retry.ts`
-- [ ] Create `src/utils/allure-utils.ts`
-- [ ] Create `data/test-data.json`
-- [ ] Create `data/user.factory.ts`
-- [ ] Create `tests/annotations.ts`
-- [ ] Create `tests/global-setup.ts`
-- [ ] Create `tests/global-teardown.ts`
-- [ ] Verify `pnpm type-check` passes for all new files
+- [x] Create `src/config/environments.ts`
+- [x] Create `src/config/timeouts.ts`
+- [x] Create `src/pages/base.page.ts`
+- [x] Create `src/pages/login.page.ts`
+- [x] Create `src/pages/dashboard.page.ts`
+- [x] Create `src/fixtures/pages.fixture.ts`
+- [x] Create `src/fixtures/auth.fixture.ts`
+- [x] Create `src/fixtures/api.fixture.ts`
+- [x] Create `src/fixtures/index.ts`
+- [x] Create `src/helpers/wait.helper.ts`
+- [x] Create `src/helpers/data.helper.ts`
+- [x] Create `src/helpers/assertion.helper.ts`
+- [x] Create `src/helpers/storage.helper.ts`
+- [x] Create `src/helpers/browser.helper.ts`
+- [x] Create `src/api/api-client.ts`
+- [x] Create `src/api/endpoints/users.endpoint.ts`
+- [x] Create `src/utils/logger.ts`
+- [x] Create `src/utils/retry.ts`
+- [x] Create `src/utils/allure-utils.ts`
+- [x] Create `data/test-data.json`
+- [x] Create `data/user.factory.ts`
+- [x] Create `tests/annotations.ts`
+- [x] Create `tests/global-setup.ts`
+- [x] Create `tests/global-teardown.ts`
+- [x] Verify `pnpm type-check` passes for all new files
 
 ---
 

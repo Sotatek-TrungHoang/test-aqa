@@ -1,0 +1,18 @@
+{
+  "users": {
+    "valid": {
+      "email": "user@example.com",
+      "password": "Password123!",
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "admin": {
+      "email": "admin@example.com",
+      "password": "AdminPass123!",
+      "firstName": "Admin",
+      "lastName": "User"
+    }
+  },
+  "invalidEmails": ["invalid", "user@", "@example.com", "user@example"],
+  "weakPasswords": ["123", "password", "abc"]
+}
