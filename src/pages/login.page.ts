@@ -8,16 +8,16 @@ export class LoginPage extends BasePage {
 
   // Lazy locators (evaluated only when accessed)
   get emailInput() {
-    return this.page.locator('[data-testid="email"]');
+    return this.page.locator('#email');
   }
   get passwordInput() {
-    return this.page.locator('[data-testid="password"]');
+    return this.page.locator('#password');
   }
   get submitButton() {
-    return this.page.locator('[data-testid="submit"]');
+    return this.page.locator('button[type="submit"]');
   }
   get errorAlert() {
-    return this.page.locator('[role="alert"]');
+    return this.page.locator('[role="alert"], .text-destructive, [class*="error"]').first();
   }
 
   async navigate(): Promise<void> {

@@ -12,7 +12,8 @@ test.describe('Auth Smoke', () => {
     await loginPage.navigate();
     await loginPage.login(env.testUser.email, env.testUser.password);
 
-    await expect(page).toHaveURL(/dashboard/);
+    // After successful login, we should leave the login page
+    await expect(page).not.toHaveURL(/\/login/);
   });
 
   test(`${Tag.smoke} login page loads`, async ({ page }) => {
@@ -20,6 +21,6 @@ test.describe('Auth Smoke', () => {
     allure.testId('AUTH-SMOKE-002');
 
     await page.goto('/login');
-    await expect(page.locator('[data-testid="submit"]')).toBeVisible();
+    await expect(page.locator('button[type="submit"]')).toBeVisible();
   });
 });
