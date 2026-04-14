@@ -1,0 +1,97 @@
+name: Google Chat Notification
+
+on:
+  workflow_run:
+    workflows: ['Test CI', 'Nightly Full Suite']
+    types: [completed]
+
+jobs:
+  notify:
+    name: Send Google Chat Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set status emoji and color
+        id: status
+        run: |
+          CONCLUSION="${{ github.event.workflow_run.conclusion }}"
+          case "$CONCLUSION" in
+            success)
+              echo "emoji=✅" >> $GITHUB_OUTPUT
+              echo "label=PASSED" >> $GITHUB_OUTPUT
+              ;;
+            failure)
+              echo "emoji=❌" >> $GITHUB_OUTPUT
+              echo "label=FAILED" >> $GITHUB_OUTPUT
+              ;;
+            cancelled)
+              echo "emoji=⚠️" >> $GITHUB_OUTPUT
+              echo "label=CANCELLED" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "emoji=ℹ️" >> $GITHUB_OUTPUT
+              echo "label=$CONCLUSION" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Send Google Chat notification
+        run: |
+          WORKFLOW="${{ github.event.workflow_run.name }}"
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          CONCLUSION="${{ github.event.workflow_run.conclusion }}"
+          RUN_URL="${{ github.event.workflow_run.html_url }}"
+          REPO="${{ github.repository }}"
+          ACTOR="${{ github.event.workflow_run.actor.login }}"
+          EMOJI="${{ steps.status.outputs.emoji }}"
+          LABEL="${{ steps.status.outputs.label }}"
+          COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
+          SHORT_SHA="${COMMIT_SHA:0:7}"
+
+          curl -s -X POST "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d @- <<EOF
+          {
+            "cardsV2": [{
+              "cardId": "workflow-notification",
+              "card": {
+                "header": {
+                  "title": "${EMOJI} ${WORKFLOW} — ${LABEL}",
+                  "subtitle": "${REPO}"
+                },
+                "sections": [{
+                  "widgets": [
+                    {
+                      "decoratedText": {
+                        "topLabel": "Branch",
+                        "text": "${BRANCH} (${SHORT_SHA})"
+                      }
+                    },
+                    {
+                      "decoratedText": {
+                        "topLabel": "Triggered by",
+                        "text": "${ACTOR}"
+                      }
+                    },
+                    {
+                      "decoratedText": {
+                        "topLabel": "Status",
+                        "text": "${LABEL}"
+                      }
+                    },
+                    {
+                      "buttonList": {
+                        "buttons": [{
+                          "text": "View Run",
+                          "onClick": {
+                            "openLink": {
+                              "url": "${RUN_URL}"
+                            }
+                          }
+                        }]
+                      }
+                    }
+                  ]
+                }]
+              }
+            }]
+          }
+          EOF
