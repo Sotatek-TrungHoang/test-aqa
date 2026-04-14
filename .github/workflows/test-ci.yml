@@ -138,15 +138,13 @@ jobs:
     needs: [smoke, regression, api]
     if: always()
     steps:
-      - uses: actions/checkout@v4
-
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: all-results/
 
       - name: Install allure CLI
-        run: npm install -g allure-commandline
+        run: npm install -g allure-commandline@2.38.1
 
       - name: Merge allure results
         run: |

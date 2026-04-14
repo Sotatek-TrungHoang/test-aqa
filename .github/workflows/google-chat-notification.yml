@@ -42,7 +42,7 @@ jobs:
         run: |
           START="${{ github.event.workflow_run.run_started_at }}"
           NOW="$(date -u +%s)"
-          START_TS="$(date -u -d "$START" +%s 2>/dev/null || date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$START" +%s 2>/dev/null || echo 0)"
+          START_TS="$(date -u -d "$START" +%s 2>/dev/null || echo 0)"
           if [ "$START_TS" -gt 0 ]; then
             DIFF=$((NOW - START_TS))
             MINS=$((DIFF / 60))
