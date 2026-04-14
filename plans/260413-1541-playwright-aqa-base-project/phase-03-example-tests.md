@@ -1,6 +1,6 @@
 # Phase 03 — Example Tests
 
-**Status:** ⬜ pending
+**Status:** ✅ complete
 **Priority:** High
 **Blocked by:** Phase 02 (fixtures/pages must exist)
 **Plan:** [plan.md](./plan.md)
@@ -311,14 +311,14 @@ test.describe('Users API', () => {
 
 ## Todo
 
-- [ ] Create `tests/smoke/auth.smoke.spec.ts`
-- [ ] Create `tests/regression/auth/login.spec.ts`
-- [ ] Create `tests/regression/auth/login-data-driven.spec.ts`
-- [ ] Create `tests/e2e/user-onboarding.e2e.spec.ts`
-- [ ] Create `tests/api/users.api.spec.ts`
-- [ ] Verify `pnpm type-check` passes for all test files
-- [ ] Confirm `pnpm test:smoke` selects only smoke tests
-- [ ] Confirm `pnpm test:api` selects only api tests
+- [x] Create `tests/smoke/auth.smoke.spec.ts`
+- [x] Create `tests/regression/auth/login.spec.ts`
+- [x] Create `tests/regression/auth/login-data-driven.spec.ts`
+- [x] Create `tests/e2e/user-onboarding.e2e.spec.ts`
+- [x] Create `tests/api/users.api.spec.ts`
+- [x] Verify `pnpm type-check` passes for all test files
+- [x] Confirm `pnpm test:smoke` selects only smoke tests
+- [x] Confirm `pnpm test:api` selects only api tests
 
 ---
 
