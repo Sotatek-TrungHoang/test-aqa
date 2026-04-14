@@ -13,8 +13,8 @@ test.describe('Login', () => {
     allure.testId('AUTH-001');
 
     await loginPage.login(env.testUser.email, env.testUser.password);
-    // After login, should leave the login page
-    await expect(page).not.toHaveURL(/\/login/);
+    // After login, should leave the login page (use navigation timeout for slower browsers)
+    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
   });
 
   test(`${Tag.regression} invalid password → error message`, async ({ loginPage, page }) => {
@@ -47,13 +47,11 @@ test.describe('Login', () => {
 
     const page = await userContext.newPage();
     try {
-      await page.goto('/dashboard');
-      await expect(page).toHaveURL(/dashboard/);
+      await page.goto('/');
+      await page.waitForLoadState('load');
 
-      // Open user menu (avatar/name button typically in header)
-      await page.locator('header button, nav button').last().click();
-      // Click logout — text is "Đăng xuất" in Vietnamese
-      await page.getByText(/đăng xuất/i).click();
+      // Logout button is in sidebar bottom, identified by its title attribute
+      await page.locator('button[title="Đăng xuất"]').click();
       await expect(page).toHaveURL(/login/);
     } finally {
       await page.close();
