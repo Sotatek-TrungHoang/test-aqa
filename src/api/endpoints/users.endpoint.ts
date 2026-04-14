@@ -1,17 +1,21 @@
 import { ApiClient } from '@api/api-client';
 
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
+/** Matches the actual API response shape: { success, message, data } */
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
 }
 
-export interface CreateUserPayload {
+export interface User {
+  id: number;
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  role: string;
+  status: string;
+  enterpriseId: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /** Typed wrapper for /users API endpoints */
@@ -19,18 +23,12 @@ export class UsersEndpoint {
   constructor(private readonly client: ApiClient) {}
 
   async getAll(): Promise<User[]> {
-    return this.client.get<User[]>('/users');
+    const res = await this.client.get<ApiResponse<User[]>>('/users');
+    return res.data;
   }
 
-  async getById(id: string): Promise<User> {
-    return this.client.get<User>(`/users/${id}`);
-  }
-
-  async create(payload: CreateUserPayload): Promise<User> {
-    return this.client.post<User>('/users', payload);
-  }
-
-  async delete(id: string): Promise<void> {
-    return this.client.delete(`/users/${id}`);
+  async getById(id: number): Promise<User> {
+    const res = await this.client.get<ApiResponse<User>>(`/users/${id}`);
+    return res.data;
   }
 }
