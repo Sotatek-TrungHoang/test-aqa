@@ -27,7 +27,14 @@ export class LoginPage extends BasePage {
   async login(email: string, password: string): Promise<void> {
     await this.fill(this.emailInput, email);
     await this.fill(this.passwordInput, password);
-    await this.submitButton.click();
+    await Promise.all([
+      this.page
+        .waitForURL(url => !url.pathname.startsWith('/login'), { timeout: 15000 })
+        .catch(() => {
+          // Navigation may not occur on failed login — ignore timeout here
+        }),
+      this.submitButton.click(),
+    ]);
   }
 
   async getErrorMessage(): Promise<string> {
