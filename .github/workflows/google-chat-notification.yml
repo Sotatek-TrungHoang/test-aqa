@@ -79,6 +79,16 @@ jobs:
           COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
           SHORT_SHA="${COMMIT_SHA:0:7}"
 
+          # Build Allure report URL (only Test CI publishes to GitHub Pages)
+          REPORT_BUTTON=""
+          if [ "$WORKFLOW" = "Test CI" ]; then
+            REPO_LOWER="$(echo "$REPO" | tr '[:upper:]' '[:lower:]')"
+            OWNER_LOWER="${REPO_LOWER%/*}"
+            REPO_NAME="${REPO_LOWER##*/}"
+            REPORT_URL="https://${OWNER_LOWER}.github.io/${REPO_NAME}/reports/${RUN_NUMBER}/"
+            REPORT_BUTTON=',{"text":"View Report","onClick":{"openLink":{"url":"'"${REPORT_URL}"'"}}}'
+          fi
+
           curl -s -X POST "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
             -d @- <<EOF
@@ -134,7 +144,7 @@ jobs:
                                   "url": "https://github.com/${REPO}/commit/${COMMIT_SHA}"
                                 }
                               }
-                            }
+                            }${REPORT_BUTTON}
                           ]
                         }
                       }
