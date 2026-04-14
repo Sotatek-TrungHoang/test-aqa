@@ -134,7 +134,7 @@ jobs:
   # ─── Merge allure results & publish report ─────────────────────────
   report:
     name: Publish Allure Report
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: [smoke, regression, api]
     if: always()
     steps:
@@ -144,6 +144,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: all-results/
+
+      - name: Install allure CLI
+        run: npm install -g allure-commandline
 
       - name: Merge allure results
         run: |

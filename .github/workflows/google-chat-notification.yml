@@ -8,7 +8,7 @@ on:
 jobs:
   notify:
     name: Send Google Chat Notification
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Set status emoji
         id: status
