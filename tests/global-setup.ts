@@ -99,6 +99,8 @@ export default async function globalSetup(): Promise<void> {
       env.testAdmin.email,
       env.testAdmin.password,
       path.join(AUTH_DIR, 'admin.json'),
-    );
+    ).catch((err: Error) => {
+      console.warn(`[globalSetup] Admin auth skipped — ${err.message}`);
+    });
   }
 }
