@@ -187,8 +187,8 @@ jobs:
       - name: Merge allure results
         run: |
           npm install -g allure-commandline
-          mkdir -p merged-allure-results
-          find all-results -name "*.json" -exec cp {} merged-allure-results/ \;
+          mkdir -p all-results merged-allure-results
+          find all-results -name "*.json" -exec cp {} merged-allure-results/ \; 2>/dev/null || true
 
       - name: Generate Allure report
         run: allure generate merged-allure-results --clean -o allure-report

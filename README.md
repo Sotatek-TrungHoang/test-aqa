@@ -87,37 +87,37 @@ Pre-commit hooks (via Husky + lint-staged) auto-run ESLint and Prettier on stage
 
 All pipelines run on a self-hosted Ubuntu runner.
 
-| Workflow | Trigger | What it does |
-|----------|---------|--------------|
-| Test CI | Push/PR to `main`/`develop` | Lint → Smoke + Regression (4 shards) + API → Allure report |
-| Nightly Full Suite | Daily 01:00 UTC + manual | Full suite across chromium, firefox, webkit |
-| Publish Allure Report | After Test CI completes | Deploys report to GitHub Pages, comments on PR |
-| Google Chat Notification | After Test CI / Nightly | Sends result card to Google Chat via webhook |
+| Workflow                 | Trigger                     | What it does                                               |
+| ------------------------ | --------------------------- | ---------------------------------------------------------- |
+| Test CI                  | Push/PR to `main`/`develop` | Lint → Smoke + Regression (4 shards) + API → Allure report |
+| Nightly Full Suite       | Daily 01:00 UTC + manual    | Full suite across chromium, firefox, webkit                |
+| Publish Allure Report    | After Test CI completes     | Deploys report to GitHub Pages, comments on PR             |
+| Google Chat Notification | After Test CI / Nightly     | Sends result card to Google Chat via webhook               |
 
 ## Environment Variables
 
 See [`.env.example`](.env.example) for the full list. Copy to `.env.local` and fill in real values.
 
-| Variable | Description |
-|----------|-------------|
-| `TEST_ENV` | Environment selector (development, staging, production) |
-| `BASE_URL` | Application base URL |
-| `API_BASE_URL` | API base URL |
-| `TEST_USER_EMAIL` | Standard test user credentials |
-| `TEST_USER_PASSWORD` | |
-| `TEST_ADMIN_EMAIL` | Admin test user credentials |
-| `TEST_ADMIN_PASSWORD` | |
+| Variable              | Description                                             |
+| --------------------- | ------------------------------------------------------- |
+| `TEST_ENV`            | Environment selector (development, staging, production) |
+| `BASE_URL`            | Application base URL                                    |
+| `API_BASE_URL`        | API base URL                                            |
+| `TEST_USER_EMAIL`     | Standard test user credentials                          |
+| `TEST_USER_PASSWORD`  |                                                         |
+| `TEST_ADMIN_EMAIL`    | Admin test user credentials                             |
+| `TEST_ADMIN_PASSWORD` |                                                         |
 
 ## Path Aliases
 
 Configured in `tsconfig.json`:
 
-| Alias | Path |
-|-------|------|
-| `@pages/*` | `src/pages/*` |
+| Alias         | Path             |
+| ------------- | ---------------- |
+| `@pages/*`    | `src/pages/*`    |
 | `@fixtures/*` | `src/fixtures/*` |
-| `@helpers/*` | `src/helpers/*` |
-| `@api/*` | `src/api/*` |
-| `@config/*` | `src/config/*` |
-| `@utils/*` | `src/utils/*` |
-| `@data/*` | `data/*` |
+| `@helpers/*`  | `src/helpers/*`  |
+| `@api/*`      | `src/api/*`      |
+| `@config/*`   | `src/config/*`   |
+| `@utils/*`    | `src/utils/*`    |
+| `@data/*`     | `data/*`         |
