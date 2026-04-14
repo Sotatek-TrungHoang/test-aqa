@@ -10,7 +10,7 @@ jobs:
     name: Send Google Chat Notification
     runs-on: self-hosted
     steps:
-      - name: Set status emoji and color
+      - name: Set status emoji
         id: status
         run: |
           CONCLUSION="${{ github.event.workflow_run.conclusion }}"
@@ -18,31 +18,64 @@ jobs:
             success)
               echo "emoji=✅" >> $GITHUB_OUTPUT
               echo "label=PASSED" >> $GITHUB_OUTPUT
+              echo "color=#34A853" >> $GITHUB_OUTPUT
               ;;
             failure)
               echo "emoji=❌" >> $GITHUB_OUTPUT
               echo "label=FAILED" >> $GITHUB_OUTPUT
+              echo "color=#EA4335" >> $GITHUB_OUTPUT
               ;;
             cancelled)
               echo "emoji=⚠️" >> $GITHUB_OUTPUT
               echo "label=CANCELLED" >> $GITHUB_OUTPUT
+              echo "color=#FBBC04" >> $GITHUB_OUTPUT
               ;;
             *)
               echo "emoji=ℹ️" >> $GITHUB_OUTPUT
-              echo "label=$CONCLUSION" >> $GITHUB_OUTPUT
+              echo "label=${CONCLUSION^^}" >> $GITHUB_OUTPUT
+              echo "color=#9E9E9E" >> $GITHUB_OUTPUT
               ;;
           esac
+
+      - name: Calculate run duration
+        id: duration
+        run: |
+          START="${{ github.event.workflow_run.run_started_at }}"
+          NOW="$(date -u +%s)"
+          START_TS="$(date -u -d "$START" +%s 2>/dev/null || date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$START" +%s 2>/dev/null || echo 0)"
+          if [ "$START_TS" -gt 0 ]; then
+            DIFF=$((NOW - START_TS))
+            MINS=$((DIFF / 60))
+            SECS=$((DIFF % 60))
+            echo "text=${MINS}m ${SECS}s" >> $GITHUB_OUTPUT
+          else
+            echo "text=N/A" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get commit message
+        id: commit
+        run: |
+          MSG="${{ github.event.workflow_run.head_commit.message }}"
+          # Truncate to first line, max 80 chars
+          FIRST_LINE="$(echo "$MSG" | head -n1)"
+          if [ ${#FIRST_LINE} -gt 80 ]; then
+            FIRST_LINE="${FIRST_LINE:0:77}..."
+          fi
+          echo "message=${FIRST_LINE}" >> $GITHUB_OUTPUT
 
       - name: Send Google Chat notification
         run: |
           WORKFLOW="${{ github.event.workflow_run.name }}"
           BRANCH="${{ github.event.workflow_run.head_branch }}"
-          CONCLUSION="${{ github.event.workflow_run.conclusion }}"
           RUN_URL="${{ github.event.workflow_run.html_url }}"
           REPO="${{ github.repository }}"
           ACTOR="${{ github.event.workflow_run.actor.login }}"
+          EVENT="${{ github.event.workflow_run.event }}"
+          RUN_NUMBER="${{ github.event.workflow_run.run_number }}"
           EMOJI="${{ steps.status.outputs.emoji }}"
           LABEL="${{ steps.status.outputs.label }}"
+          DURATION="${{ steps.duration.outputs.text }}"
+          COMMIT_MSG="${{ steps.commit.outputs.message }}"
           COMMIT_SHA="${{ github.event.workflow_run.head_sha }}"
           SHORT_SHA="${COMMIT_SHA:0:7}"
 
@@ -51,46 +84,63 @@ jobs:
             -d @- <<EOF
           {
             "cardsV2": [{
-              "cardId": "workflow-notification",
+              "cardId": "workflow-notification-${RUN_NUMBER}",
               "card": {
                 "header": {
-                  "title": "${EMOJI} ${WORKFLOW} — ${LABEL}",
-                  "subtitle": "${REPO}"
+                  "title": "${EMOJI} ${WORKFLOW} #${RUN_NUMBER} — ${LABEL}",
+                  "subtitle": "${REPO} • ${BRANCH}"
                 },
-                "sections": [{
-                  "widgets": [
-                    {
-                      "decoratedText": {
-                        "topLabel": "Branch",
-                        "text": "${BRANCH} (${SHORT_SHA})"
+                "sections": [
+                  {
+                    "header": "Run Details",
+                    "widgets": [
+                      {
+                        "decoratedText": {
+                          "topLabel": "Commit",
+                          "text": "<b>${SHORT_SHA}</b> — ${COMMIT_MSG}"
+                        }
+                      },
+                      {
+                        "decoratedText": {
+                          "topLabel": "Trigger",
+                          "text": "${EVENT} by <b>${ACTOR}</b>"
+                        }
+                      },
+                      {
+                        "decoratedText": {
+                          "topLabel": "Duration",
+                          "text": "${DURATION}"
+                        }
                       }
-                    },
-                    {
-                      "decoratedText": {
-                        "topLabel": "Triggered by",
-                        "text": "${ACTOR}"
-                      }
-                    },
-                    {
-                      "decoratedText": {
-                        "topLabel": "Status",
-                        "text": "${LABEL}"
-                      }
-                    },
-                    {
-                      "buttonList": {
-                        "buttons": [{
-                          "text": "View Run",
-                          "onClick": {
-                            "openLink": {
-                              "url": "${RUN_URL}"
+                    ]
+                  },
+                  {
+                    "widgets": [
+                      {
+                        "buttonList": {
+                          "buttons": [
+                            {
+                              "text": "View Run",
+                              "onClick": {
+                                "openLink": {
+                                  "url": "${RUN_URL}"
+                                }
+                              }
+                            },
+                            {
+                              "text": "View Commit",
+                              "onClick": {
+                                "openLink": {
+                                  "url": "https://github.com/${REPO}/commit/${COMMIT_SHA}"
+                                }
+                              }
                             }
-                          }
-                        }]
+                          ]
+                        }
                       }
-                    }
-                  ]
-                }]
+                    ]
+                  }
+                ]
               }
             }]
           }
