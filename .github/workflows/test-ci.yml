@@ -18,7 +18,7 @@ jobs:
   # ─── Lint & type-check ────────────────────────────────────────────
   lint:
     name: Lint & Type Check
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
@@ -46,7 +46,7 @@ jobs:
   # ─── Smoke tests (fast feedback) ──────────────────────────────────
   smoke:
     name: Smoke Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: lint
     steps:
       - uses: actions/checkout@v4
@@ -87,7 +87,7 @@ jobs:
   # ─── Regression tests (matrix: chrome × 4 shards) ────────────────
   regression:
     name: Regression [${{ matrix.shard }}/${{ matrix.total }}]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: lint
     strategy:
       fail-fast: false
@@ -134,7 +134,7 @@ jobs:
   # ─── API tests ────────────────────────────────────────────────────
   api:
     name: API Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: lint
     steps:
       - uses: actions/checkout@v4
@@ -173,7 +173,7 @@ jobs:
   # ─── Merge allure results & publish report ─────────────────────────
   report:
     name: Publish Allure Report
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [smoke, regression, api]
     if: always()
     steps:
